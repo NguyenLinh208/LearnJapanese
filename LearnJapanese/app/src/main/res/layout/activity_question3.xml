@@ -1,0 +1,53 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+
+    <LinearLayout
+        android:orientation="vertical"
+	    android:layout_width="match_parent"
+	    android:layout_height="match_parent" >
+	    <TextView
+	        android:id="@+id/question_word"
+	        android:layout_width="match_parent"
+	        android:layout_height="0dip"
+	        android:layout_weight="1.4"
+	        android:gravity="center"
+	        android:textSize="@dimen/very_large"/>
+	    <Button
+	        android:id="@+id/answer1"
+	        android:layout_width="match_parent"
+	        android:layout_height="0dip"
+	        android:layout_weight="1"
+	        android:gravity="center"
+	        android:textSize="@dimen/large" />
+	    <Button
+	        android:id="@+id/answer2"
+	        android:layout_width="match_parent"
+	        android:layout_height="0dip"
+	        android:layout_weight="1"
+	        android:gravity="center"
+	        android:textSize="@dimen/large" />
+	    <Button
+	        android:id="@+id/answer3"
+	        android:layout_width="match_parent"
+	        android:layout_height="0dip"
+	        android:layout_weight="1"
+	        android:gravity="center"
+	        android:textSize="@dimen/large" />
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/skip_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:paddingTop="2dip"
+        android:paddingBottom="2dip"
+        android:paddingLeft="8dip"
+        android:paddingRight="8dip"
+        android:gravity="center"
+        android:textSize="@dimen/medium"
+        android:text="@string/skip_button" />
+
+</RelativeLayout>
