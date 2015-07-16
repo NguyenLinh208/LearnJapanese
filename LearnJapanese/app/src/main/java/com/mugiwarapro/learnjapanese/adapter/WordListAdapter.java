@@ -1,4 +1,4 @@
-package com.mugiwarapro.learnjapanese.model;
+package com.mugiwarapro.learnjapanese.adapter;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -8,6 +8,7 @@ import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
 import com.mugiwarapro.learnjapanese.R;
+import com.mugiwarapro.learnjapanese.model.WordEntity;
 
 import java.util.List;
 

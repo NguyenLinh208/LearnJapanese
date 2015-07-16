@@ -15,6 +15,7 @@ import android.widget.Toast;
 
 import com.mugiwarapro.learnjapanese.Config;
 import com.mugiwarapro.learnjapanese.R;
+import com.mugiwarapro.learnjapanese.adapter.WordListAdapter;
 import com.mugiwarapro.learnjapanese.util.KeyboardUtil;
 
 import java.util.List;
