@@ -1,9 +1,9 @@
 <resources>
     <string name="app_name">LearnJapanese</string>
 
-    <string name="title_section1">Section 1</string>
-    <string name="title_section2">Section 2</string>
-    <string name="title_section3">Section 3</string>
+    <string name="home">Section 1</string>
+    <string name="learn">Section 2</string>
+    <string name="list_category">Section 3</string>
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
@@ -18,7 +18,7 @@
 
     <string name="menu_settings">Cài đặt</string>
     <string name="learning_mode">Chế độ học tập</string>
-    <string name="revise_mode">復習モード</string>
+    <string name="revise_mode">Chế độ ôn tập</string>
     <string name="register_mode">Thêm từ mới</string>
     <string name="check_mode">Từ đã thêm</string>
     <string name="notebook_mode">練習帳</string>
@@ -27,7 +27,7 @@
     <string name="part">Loại từ</string>
     <string name="example_en">Câu ví dụ</string>
     <string name="example_ja">Dịch</string>
-    <string name="category">カテゴリ</string>
+    <string name="category">Phân loại</string>
     <string name="register">Thêm từ</string>
     <string name="update">Chỉnh sửa</string>
     <string name="delete">Xoá</string>
@@ -50,19 +50,19 @@
     <string name="result_right">Đúng</string>
     <string name="result_wrong">Sai</string>
     <string name="finish_button">Kết thúc</string>
-    <string name="revise_mode_select">復習モード</string>
-    <string name="words_mode_select">単語モード</string>
-    <string name="sentence_mode_select">例文モード</string>
-    <string name="learning_q3_mode">三択モード</string>
-    <string name="learning_q3_mode_desc">三択形式で学習を行います</string>
-    <string name="learning_q4_mode">四択モード</string>
+    <string name="revise_mode_select">Chế độ ôn tập</string>
+    <string name="words_mode_select">Chế độ từ vựng</string>
+    <string name="sentence_mode_select">Chế độ mẫu câu</string>
+    <string name="learning_q3_mode">lựa chọn 3 phương án</string>
+    <string name="learning_q3_mode_desc">Học với câu hỏi 3 lựa chọn</string>
+    <string name="learning_q4_mode">lựa chọn 4 phương án</string>
     <string name="learning_q4_mode_desc">四択形式で学習を行います</string>
-    <string name="learning_hide_mode">想起モード</string>
+    <string name="learning_hide_mode">tưởng tượng</string>
     <string name="learning_hide_mode_desc">意味を隠す形式で学習を行います</string>
     <string name="learning_hide_mode_desc2">スペルを隠す形式で学習を行います</string>
-    <string name="revise_show_answer">解答を見る</string>
-    <string name="revise_right">正解した</string>
-    <string name="revise_wrong">間違えた</string>
+    <string name="revise_show_answer">xem đáp án</string>
+    <string name="revise_right">Chính xác</string>
+    <string name="revise_wrong">Sai</string>
     <string name="db_name">Nhập tên data</string>
     <string name="data_filename">File dữ liệu</string>
     <string name="file_choose">▼</string>
@@ -74,7 +74,7 @@
     <string name="lang_french">フランス語</string>
     <string name="lang_german">ドイツ語</string>
     <string name="lang_italian">イタリア語</string>
-    <string name="standard">標準</string>
+    <string name="standard">Tiêu chuẩn</string>
     <string name="low">Thấp</string>
     <string name="high">Cao</string>
     <string name="slow">Chậm</string>
@@ -83,13 +83,13 @@
     <string name="fast">Nhanh</string>
     <string name="learning_setting_title">Cài đặt học tập</string>
     <string name="learning_setting_summary">学習に関する設定を行います</string>
-    <string name="learning_mode_setting_title">学習モードの設定</string>
-    <string name="learning_mode_choice_title">学習形式の設定</string>
+    <string name="learning_mode_setting_title">Cài đặt chế độ học tập</string>
+    <string name="learning_mode_choice_title">Cài đặt hình thức học tập</string>
     <string name="learning_mode_choice_summary">学習モードにおける出題形式の設定を行います</string>
-    <string name="revise_mode_choice_title">復習形式の設定</string>
+    <string name="revise_mode_choice_title">Cài đặt hình thức ôn tập</string>
     <string name="revise_mode_choice_summary">復習モードにおける出題形式の設定を行います</string>
-    <string name="not_all">通常モード</string>
-    <string name="all">演習モード</string>
+    <string name="not_all">Chế độ thông thường</string>
+    <string name="all">Chế độ luyện tập/string</string>
     <string name="new_words_num">新規語出題数</string>
     <string name="rev_words_max">復習語最大数</string>
     <string name="learning_general_setting_title">学習全般の設定</string>
@@ -130,26 +130,26 @@
     <string name="word_updated">Đã update từ</string>
     <string name="word_deleted">Đã xoá từ</string>
     <string name="db_create_success">Đã tạo Cơ sở dữ liệu</string>
-    <string name="db_create_fail">データベースの作成に失敗しました</string>
-    <string name="db_deleted">データベースを削除しました</string>
+    <string name="db_create_fail">Tạo cơ sở dữ liệu thất bại</string>
+    <string name="db_deleted">Đã xoá cơ sở dữ liệu</string>
     <string name="db_delete_fail">現在設定されているデータベースは削除できません</string>
-    <string name="learning_data_deleted">学習情報を削除しました</string>
+    <string name="learning_data_deleted">Đã xoá dữ liệu học tập</string>
     <string name="title_activity_main">Vocabu.</string>
     <string name="title_activity_register">Thêm từ mới</string>
-    <string name="title_activity_word_list">単語の確認</string>
-    <string name="title_activity_learning_list">新規語学習</string>
-    <string name="title_activity_question4">四択問題</string>
-    <string name="title_activity_setting">設定</string>
+    <string name="title_activity_word_list">Xác nhận từ mới</string>
+    <string name="title_activity_learning_list">Học từ mới</string>
+    <string name="title_activity_question4">Câu hỏi bốn lựa chọn</string>
+    <string name="title_activity_setting">Cài đặt</string>
     <string name="title_activity_revise_select">復習モード選択</string>
-    <string name="title_activity_db_create">データベース作成</string>
-    <string name="title_activity_meaning_hide_question">想起式復習</string>
+    <string name="title_activity_db_create">Tạo mới cơ sở dữ liệu</string>
+    <string name="title_activity_meaning_hide_question">Ôn tập bằng câu hỏi đoán</string>
     <string name="title_activity_question3">三択問題</string>
-    <string name="word_mode">単語モード</string>
-    <string name="sentence_mode">例文モード</string>
-    <string name="bookmark_on">ON</string>
-    <string name="bookmark_off">OFF</string>
+    <string name="word_mode">Bài tập với từ</string>
+    <string name="sentence_mode">Bài tập điền từ</string>
+    <string name="bookmark_on">Cộng</string>
+    <string name="bookmark_off">Trừ</string>
     <string name="bookmark_mode">しおり確認</string>
-    <string name="all_bookmark">全て</string>
+    <string name="all_bookmark">Toàn bộ</string>
     <string name="title_activity_notebook">練習帳</string>
 
 </resources>

@@ -18,7 +18,7 @@ public class WordDialogNoBookmark extends Dialog {
 	private String mSpeakText = "";
 
 	public WordDialogNoBookmark(Context context, WordEntity word, TextToSpeech tts) {
-		super(context, R.style.WordDialogTheme);
+		super(context);
 		mWord = word;
 		mTTS  = tts;
 	}

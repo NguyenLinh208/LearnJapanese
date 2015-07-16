@@ -23,7 +23,7 @@ public class WordDialog extends Dialog implements OnClickListener {
 	private static WordDbHelper mDbHelper = WordDbHelper.getInstance();
 	
 	public WordDialog(Context context, WordEntity word, TextToSpeech tts) {
-		super(context, R.style.WordDialogTheme);
+		super(context);
 		mWord = word;
 		mTTS  = tts;
 	}
@@ -38,7 +38,8 @@ public class WordDialog extends Dialog implements OnClickListener {
 
 		// テキストの設定
 		setupText();
-		
+
+		setTitle("Chi tiết");
 		bookmark_off=(Button)findViewById(R.id.bookmark_off_button);
 		bookmark_off.setOnClickListener(this);
 		
