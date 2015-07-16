@@ -17,6 +17,7 @@ import android.view.MenuItem;
 import android.support.v4.widget.DrawerLayout;
 import android.widget.Toast;
 
+import com.mugiwarapro.learnjapanese.fragment.CategoryGridFragment;
 import com.mugiwarapro.learnjapanese.fragment.HomeFragment;
 import com.mugiwarapro.learnjapanese.fragment.NavigationDrawerFragment;
 import com.mugiwarapro.learnjapanese.R;
@@ -104,9 +105,10 @@ public class MainActivity extends ActionBarActivity
                         .commit();
                 break;
             case 2:
-                startActivity(new Intent(this, WordListActivity.class));
-                return;
-
+                fragmentManager.beginTransaction()
+                        .replace(R.id.container, new CategoryGridFragment())
+                        .commit();
+                break;
         }
     }
 

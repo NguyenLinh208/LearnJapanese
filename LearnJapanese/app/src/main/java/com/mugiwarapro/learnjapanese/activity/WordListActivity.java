@@ -31,12 +31,13 @@ public class  WordListActivity extends WordListBase<String> {
 	private static final int CONTEXT_MODIFY = 0;
 	private static final int CONTEXT_DELETE = 1;
 	private static final int CONTEXT_CANCEL = 2;
-
+    private static final String CATEGORY = "CATEGORY";
 	private EditText mSearchWord;
 
 	@Override
 	protected void setContentView() {
 		setContentView(R.layout.activity_word_list);
+
 	}
 
 	@Override
@@ -45,8 +46,9 @@ public class  WordListActivity extends WordListBase<String> {
 
 		// ビューの取得
         mSearchWord = (EditText)findViewById(R.id.search_text);
-        
-        // コンテキストメニュー＝長押しされたときのメニュー登録
+
+
+		// コンテキストメニュー＝長押しされたときのメニュー登録
         registerForContextMenu(mWordsList);
 
         // 検索ボタンクリック
@@ -58,16 +60,18 @@ public class  WordListActivity extends WordListBase<String> {
 				// キーボードを隠す
 				KeyboardUtil.hide(getApplicationContext(), v);
 			}
-        });
+		});
 	}
+
 
 	@Override
 	protected List<WordEntity> doInAsyncBackground(String... args) {
 		WordDao dao = new WordDao();
+		String order = WordDbHelper.WCOL_SPELL + " asc";	// スペルに関して昇順ソート（降順はdesc）
+		String limit = null;
     	// 検索条件設定
 		String where = WordDbHelper.WCOL_SPELL + " like ?";	// 部分一致
 		String param = "%" + args[0] + "%";					// 条件：searchSpellを一部分に含む（%は任意の0文字以上）
-		String order = WordDbHelper.WCOL_SPELL + " asc";	// スペルに関して昇順ソート（降順はdesc）
 		// 検索実行
 		return dao.searchWord(PROJECTION, where, new String[]{param}, order);
 	}
@@ -76,9 +80,29 @@ public class  WordListActivity extends WordListBase<String> {
 	protected void onResume() {
 		super.onResume();
 		// 初期データの表示
-		search(mSearchWord.getText().toString());
+		initData();
+
 	}
-	
+
+	protected void initData() {
+		Intent intent = getIntent();
+		int category = intent.getIntExtra(CATEGORY, 0);
+
+		List<WordEntity> list;
+		WordDao dao = new WordDao();
+		//検索条件設定
+		String order = WordDbHelper.WCOL_SPELL + " asc";	// スペルに関して昇順ソート（降順はdesc）
+		String limit = null;
+		String where =  WordDbHelper.WCOL_CATEGORY_FULL + " = ?";
+		String[] params = {String.valueOf(category)};
+		// 検索実行
+		list = dao.searchWord(PROJECTION, where, params, order, limit);
+
+		mListAdapter.addAll(list);
+		mListAdapter.notifyDataSetChanged();
+	}
+
+
     /**
      * コンテキストメニュー生成処理
      */
