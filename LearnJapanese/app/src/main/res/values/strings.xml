@@ -1,9 +1,9 @@
 <resources>
     <string name="app_name">LearnJapanese</string>
 
-    <string name="home">Section 1</string>
-    <string name="learn">Section 2</string>
-    <string name="list_category">Section 3</string>
+    <string name="home">HOME</string>
+    <string name="learn">CAÌ ĐẶT</string>
+    <string name="list_category">CATEGORY</string>
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
@@ -105,7 +105,7 @@
     <string name="db_delete_summary">選択されたdbファイルを削除します</string>
     <string name="words_setting_title">用語設定</string>
     <string name="words_setting_summary">登録画面の用語の設定を行います</string>
-    <string name="words_set_default">デフォルトに戻す</string>
+    <string name="words_set_default">Đặt lại giá trị đầu</string>
     <string name="sound_setting_title">サウンド設定</string>
     <string name="sound_setting_summary">効果音やTTSに関する設定を行います</string>
     <string name="sound_use_title">効果音を鳴らす</string>
@@ -151,5 +151,8 @@
     <string name="bookmark_mode">しおり確認</string>
     <string name="all_bookmark">Toàn bộ</string>
     <string name="title_activity_notebook">練習帳</string>
+
+    <!-- Content Description -->
+    <string name="desc_list_item_icon">Item Icon</string>
 
 </resources>

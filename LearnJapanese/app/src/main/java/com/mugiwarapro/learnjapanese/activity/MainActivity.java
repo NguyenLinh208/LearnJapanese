@@ -1,27 +1,32 @@
 package com.mugiwarapro.learnjapanese.activity;
 
+import android.app.Fragment;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.Configuration;
+import android.content.res.TypedArray;
 import android.os.AsyncTask;
 import android.os.Environment;
 import android.preference.PreferenceManager;
 import android.speech.tts.TextToSpeech;
 import android.support.v7.app.ActionBarActivity;
-import android.support.v7.app.ActionBar;
 import android.app.FragmentManager;
 import android.os.Bundle;
+import android.support.v4.app.ActionBarDrawerToggle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.support.v4.widget.DrawerLayout;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ListView;
 import android.widget.Toast;
-
+import com.mugiwarapro.learnjapanese.adapter.NavigationDrawerAdapter;
 import com.mugiwarapro.learnjapanese.fragment.CategoryGridFragment;
 import com.mugiwarapro.learnjapanese.fragment.HomeFragment;
-import com.mugiwarapro.learnjapanese.fragment.NavigationDrawerFragment;
 import com.mugiwarapro.learnjapanese.R;
-
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -29,24 +34,33 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
-
 import com.mugiwarapro.learnjapanese.Config;
 import com.mugiwarapro.learnjapanese.fragment.SettingFragment;
+import com.mugiwarapro.learnjapanese.model.NavigationDrawerItem;
 import com.mugiwarapro.learnjapanese.model.WordDao;
 import com.mugiwarapro.learnjapanese.model.WordDbHelper;
 import com.mugiwarapro.learnjapanese.model.WordEntity;
 import com.mugiwarapro.learnjapanese.util.ArrayUtil;
 import com.mugiwarapro.learnjapanese.util.DateUtil;
 
-
-public class MainActivity extends ActionBarActivity
-        implements NavigationDrawerFragment.NavigationDrawerCallbacks {
+public class MainActivity extends ActionBarActivity {
 
     private static final int REQ_CODE_TTS = 1;
-
+    private DrawerLayout mDrawerLayout;
+    private ListView mDrawList;
     private List<WordEntity> mData;
     private String[] mParts;
     private String[] mCategories;
+    private ActionBarDrawerToggle mDrawerToggle;
+
+    private CharSequence mDrawTitle;
+    private CharSequence mTitle;
+
+    // slide menu items
+    private String[] navMenuTitles;
+    private TypedArray navMenuIcons;
+    private ArrayList<NavigationDrawerItem> navDrawerItems;
+    private NavigationDrawerAdapter adapter;
 
     private static File mFileDir;
 
@@ -54,30 +68,65 @@ public class MainActivity extends ActionBarActivity
         return mFileDir;
     }
 
-    /**
-     * Fragment managing the behaviors, interactions and presentation of the navigation drawer.
-     */
-    private NavigationDrawerFragment mNavigationDrawerFragment;
-
-    /**
-     * Used to store the last screen title. For use in {@link #restoreActionBar()}.
-     */
-    private CharSequence mTitle;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        mNavigationDrawerFragment = (NavigationDrawerFragment)
-                getSupportFragmentManager().findFragmentById(R.id.navigation_drawer);
-        mTitle = getTitle();
+        mTitle = mDrawTitle = getTitle();
 
-        // Set up the drawer.
-        mNavigationDrawerFragment.setUp(
-                R.id.navigation_drawer,
-                (DrawerLayout) findViewById(R.id.drawer_layout));
+        //Load slide menu Item
+        navMenuTitles = getResources().getStringArray(R.array.nav_drawer_items);
+        navMenuIcons = getResources().obtainTypedArray(R.array.nav_drawer_icons);
 
+        mDrawerLayout = (DrawerLayout)findViewById(R.id.drawer_layout);
+        mDrawList = (ListView)findViewById(R.id.list_slidermenu);
+
+        //List item of NavigationDrawer
+        navDrawerItems = new ArrayList<NavigationDrawerItem>();
+
+        // adding nav drawer items to array
+        // Home
+        navDrawerItems.add(new NavigationDrawerItem(navMenuTitles[0], navMenuIcons.getResourceId(0, -1)));
+        // Setting
+        navDrawerItems.add(new NavigationDrawerItem(navMenuTitles[1], navMenuIcons.getResourceId(1, -1)));
+        // Category
+        navDrawerItems.add(new NavigationDrawerItem(navMenuTitles[2], navMenuIcons.getResourceId(2, -1)));
+        navMenuIcons.recycle();
+        adapter = new NavigationDrawerAdapter(getApplicationContext(),navDrawerItems);
+        mDrawList.setAdapter(adapter);
+        mDrawList.setOnItemClickListener(new SlideMenuClickListener());
+
+        //Show actionbar
+        getSupportActionBar().setDisplayShowTitleEnabled(true);
+        getSupportActionBar().setHomeButtonEnabled(true);
+
+        mDrawerToggle = new ActionBarDrawerToggle(
+                this,
+                mDrawerLayout,
+                R.drawable.ic_drawer, //nav menu toggle icon
+                R.string.app_name,    // nav drawer open - description for accessibility
+                R.string.app_name     // nav drawer close - description for accessibility
+        ){
+            public void onDrawerClosed(View view) {
+                getSupportActionBar().setTitle(mTitle);
+                // calling onPrepareOptionsMenu() to show action bar icons
+                invalidateOptionsMenu();
+            }
+
+            public void onDrawerOpened(View drawerView) {
+                getSupportActionBar().setTitle(mDrawTitle);
+                // calling onPrepareOptionsMenu() to hide action bar icons
+                invalidateOptionsMenu();
+            }
+        };
+
+        mDrawerLayout.setDrawerListener(mDrawerToggle);
+
+        if (savedInstanceState == null) {
+            displayView(0);
+        }
 
         // ディレクトリの取得
         // 他のクラスから一括で利用される
@@ -90,77 +139,103 @@ public class MainActivity extends ActionBarActivity
         checkDbFileExists();
     }
 
-    @Override
-    public void onNavigationDrawerItemSelected(int position) {
-        FragmentManager fragmentManager = getFragmentManager();
+    /**
+     * Slide menu item click listener
+     * */
+    private class SlideMenuClickListener implements
+            ListView.OnItemClickListener {
+        @Override
+        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            displayView(position);
+        }
+    }
+
+    private void displayView(int position) {
+        Fragment fragment = null;
         switch (position) {
             case 0:
-                fragmentManager.beginTransaction()
-                        .replace(R.id.container, HomeFragment.newInstance(position))
-                        .commit();
+                fragment = new HomeFragment();
                 break;
             case 1:
-                fragmentManager.beginTransaction()
-                        .replace(R.id.container, SettingFragment.newInstance(position))
-                        .commit();
+                fragment = new SettingFragment();
                 break;
             case 2:
-                fragmentManager.beginTransaction()
-                        .replace(R.id.container, new CategoryGridFragment())
-                        .commit();
+                fragment = new CategoryGridFragment();
+                break;
+            default:
                 break;
         }
-    }
 
-    public void onSectionAttached(int number) {
-        switch (number) {
-            case 1:
-                mTitle = getString(R.string.home);
-                break;
-            case 2:
-                mTitle = getString(R.string.learn);
-                break;
-            case 3:
-                mTitle = getString(R.string.list_category);
-                break;
+        if (fragment != null) {
+            FragmentManager fragmentManager = getFragmentManager();
+            fragmentManager.beginTransaction()
+                    .replace(R.id.container, fragment).commit();
+
+            // update selected item and title, then close the drawer
+            mDrawList.setItemChecked(position, true);
+            mDrawList.setSelection(position);
+            setTitle(navMenuTitles[position]);
+            mDrawerLayout.closeDrawer(mDrawList);
+        } else {
+            // error in creating fragment
+            Log.e("MainActivity", "Error in creating fragment");
         }
+
+        Log.v("MenuTitle", navMenuTitles[0]);
+
     }
-
-    public void restoreActionBar() {
-        ActionBar actionBar = getSupportActionBar();
-        actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
-        actionBar.setDisplayShowTitleEnabled(true);
-        actionBar.setTitle(mTitle);
-    }
-
-
+    /**
+     * Slide menu item click listener
+     * */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        if (!mNavigationDrawerFragment.isDrawerOpen()) {
-            // Only show items in the action bar relevant to this screen
-            // if the drawer is not showing. Otherwise, let the drawer
-            // decide what to show in the action bar.
-            getMenuInflater().inflate(R.menu.main, menu);
-            restoreActionBar();
-            return true;
-        }
-        return super.onCreateOptionsMenu(menu);
+        getMenuInflater().inflate(R.menu.main, menu);
+        return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        if (mDrawerToggle.onOptionsItemSelected(item)) {
             return true;
         }
-
-        return super.onOptionsItemSelected(item);
+        switch (item.getItemId()) {
+            case R.id.action_settings:
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
+
+    /***
+     * Called when invalidateOptionsMenu() is triggered
+     */
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        // if nav drawer is opened, hide the action items
+        boolean drawerOpen = mDrawerLayout.isDrawerOpen(mDrawList);
+        menu.findItem(R.id.action_settings).setVisible(!drawerOpen);
+        return super.onPrepareOptionsMenu(menu);
+    }
+
+    @Override
+    public void setTitle(CharSequence title) {
+        mTitle = title;
+        getSupportActionBar().setTitle(mTitle);
+    }
+
+    @Override
+    protected void onPostCreate(Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
+        // Sync the toggle state after onRestoreInstanceState has occurred.
+        mDrawerToggle.syncState();
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        mDrawerToggle.onConfigurationChanged(newConfig);
+    }
+
 
 
     /**
@@ -204,8 +279,6 @@ public class MainActivity extends ActionBarActivity
             pref.edit().putBoolean(Config.TTS_CHECKED, true).commit();
         }
     }
-
-
 
     private void checkDbFileExists() {
         // DBファイルの存在確認

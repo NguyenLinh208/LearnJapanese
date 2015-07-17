@@ -1,6 +1,5 @@
 package com.mugiwarapro.learnjapanese.fragment;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -14,9 +13,7 @@ import android.widget.Toast;
 
 import com.mugiwarapro.learnjapanese.Config;
 import com.mugiwarapro.learnjapanese.R;
-import com.mugiwarapro.learnjapanese.activity.LearningList;
 import com.mugiwarapro.learnjapanese.activity.LearningListActivity;
-import com.mugiwarapro.learnjapanese.activity.MainActivity;
 
 /**
  * Created by usr0200475 on 15/07/13.
@@ -48,7 +45,7 @@ public class HomeFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_main, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_home, container, false);
 
         SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getActivity());
         Button settingButton = (Button)rootView.findViewById(R.id.setting_button);
@@ -57,21 +54,13 @@ public class HomeFragment extends Fragment {
             public void onClick(View v) {
                 Intent intent;
                 SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getActivity());
-                Toast.makeText(getActivity(),"onClicked",Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), "onClicked", Toast.LENGTH_SHORT).show();
                 pref.edit().putString(Config.DIALOG_MODE, "0").commit();
                 intent = new Intent(getActivity(), LearningListActivity.class);
                 startActivity(intent);
             }
         });
         return rootView;
-    }
-
-
-    @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-        ((MainActivity) activity).onSectionAttached(
-                getArguments().getInt(ARG_SECTION_NUMBER));
     }
 
 
