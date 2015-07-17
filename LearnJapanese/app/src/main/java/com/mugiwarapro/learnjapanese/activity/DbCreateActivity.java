@@ -234,8 +234,8 @@ public class DbCreateActivity extends Activity implements OnClickListener, andro
 		BufferedReader br = null;
 		int lineNum = 4;
 		try {
-			//br = new BufferedReader(new InputStreamReader(getResources().openRawResource(R.raw.data)));
-			br = new BufferedReader(new InputStreamReader(new FileInputStream(new File(MainActivity.getApplicationDir(), filename)), ENCODE));
+			br = new BufferedReader(new InputStreamReader(getResources().openRawResource(R.raw.data)));
+//			br = new BufferedReader(new InputStreamReader(new FileInputStream(new File(MainActivity.getApplicationDir(), filename)), ENCODE));
 			// 1行目は読み飛ばす
 			br.readLine();
 			// 2行目：品詞

@@ -101,29 +101,26 @@ public class MainActivity extends ActionBarActivity {
         //Show actionbar
         getSupportActionBar().setDisplayShowTitleEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
-
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         mDrawerToggle = new ActionBarDrawerToggle(
                 this,
                 mDrawerLayout,
-                R.drawable.ic_drawer, //nav menu toggle icon
-                R.string.app_name,    // nav drawer open - description for accessibility
-                R.string.app_name     // nav drawer close - description for accessibility
+                R.drawable.ic_drawer,
+                R.string.app_name,
+                R.string.app_name
         ){
             public void onDrawerClosed(View view) {
                 getSupportActionBar().setTitle(mTitle);
-                // calling onPrepareOptionsMenu() to show action bar icons
                 invalidateOptionsMenu();
             }
 
             public void onDrawerOpened(View drawerView) {
                 getSupportActionBar().setTitle(mDrawTitle);
-                // calling onPrepareOptionsMenu() to hide action bar icons
                 invalidateOptionsMenu();
             }
         };
 
         mDrawerLayout.setDrawerListener(mDrawerToggle);
-
         if (savedInstanceState == null) {
             displayView(0);
         }
@@ -226,7 +223,6 @@ public class MainActivity extends ActionBarActivity {
     @Override
     protected void onPostCreate(Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
-        // Sync the toggle state after onRestoreInstanceState has occurred.
         mDrawerToggle.syncState();
     }
 
@@ -290,10 +286,11 @@ public class MainActivity extends ActionBarActivity {
         final File dbFile = new File(MainActivity.getApplicationDir(), dbFilename);
         // 存在している場合，削除の確認
         if(dbFile.exists()) {
-            Toast.makeText(MainActivity.this,"Load thành công Data ", Toast.LENGTH_SHORT);
+            Toast.makeText(MainActivity.this,"Load thành công Data ", Toast.LENGTH_SHORT).show();
         } else {
             // ファイルが存在しない場合，DB作成へ
             createDatabase();
+            Toast.makeText(MainActivity.this,"Đang tạo Data" , Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -323,12 +320,10 @@ public class MainActivity extends ActionBarActivity {
     private void createDatabase() {
         // ファイル名取得
         String csvFilename = "data.csv";
-        // データ読み込み
-        // 成功したらtrueが返る
         if(readData()) {
             // 存在しているDBを削除csv
             // 別スレッドでDBを作成
-            createDatabaseInBackground("data");
+            createDatabaseInBackground("database");
         } else {
             // 何らかの原因でDBファイルの作成に失敗
             String msg = getResources().getString(R.string.db_create_fail);
@@ -341,18 +336,6 @@ public class MainActivity extends ActionBarActivity {
         // UIスレッドでは検索中ダイアログを表示
         new AsyncTask<Void, Void, Void>() {
 
-            private ProgressDialog progressDialog;
-
-            @Override
-            protected void onPreExecute() {
-                // 作成中というダイアログを表示
-                progressDialog = new ProgressDialog(MainActivity.this);
-                progressDialog.setTitle(R.string.progress_create);
-                progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-                progressDialog.setCancelable(true);
-                progressDialog.show();
-            }
-
             @Override
             protected Void doInBackground(Void... args) {
                 // データベース作成
@@ -363,22 +346,6 @@ public class MainActivity extends ActionBarActivity {
                 dao.remakeParts(mParts);
                 dao.remakeCategories(mCategories);
                 return null;
-            }
-
-            @Override
-            protected void onPostExecute(Void result) {
-                progressDialog.dismiss();
-                // DB作成後にcsvファイルを削除する場合，削除処理
-                // トーストを表示
-                String msg = getResources().getString(R.string.db_create_success);
-                Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_SHORT).show();
-                // 入力フィールドクリア
-            }
-
-            @Override
-            protected void onCancelled() {
-                progressDialog.dismiss();
-                this.cancel(true);
             }
 
         }.execute();
@@ -465,7 +432,6 @@ public class MainActivity extends ActionBarActivity {
                 return false;
             }
         }
-
         return true;
     }
 
