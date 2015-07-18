@@ -14,7 +14,7 @@ public class WordDbHelper extends SQLiteOpenHelper {
 	private static final int DB_VERSION = 1;
 
 	// デフォルト設定
-	public static final String DEF_DB_NAME = "HelloWord.db";
+	public static final String DEF_DB_NAME = "data.db";
 	// 品詞一覧
 	private static final String[] DEF_PARTS = {"名詞", "動詞", "助動詞", "形容詞", "副詞", "前置詞", "接続詞", "熟語"};
 	// カテゴリ

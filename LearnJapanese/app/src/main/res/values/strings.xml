@@ -151,6 +151,7 @@
     <string name="bookmark_mode">しおり確認</string>
     <string name="all_bookmark">Toàn bộ</string>
     <string name="title_activity_notebook">練習帳</string>
+    <string name="creat_data_dialog">Ấn "Đồng Ý" để tải cơ sở dữ liệu</string>
 
     <!-- Content Description -->
     <string name="desc_list_item_icon">Item Icon</string>

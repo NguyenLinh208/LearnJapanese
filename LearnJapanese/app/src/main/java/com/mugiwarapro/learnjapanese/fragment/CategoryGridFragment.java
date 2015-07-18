@@ -70,5 +70,4 @@ public class CategoryGridFragment extends Fragment implements AdapterView.OnItem
 
     }
 
-
 }

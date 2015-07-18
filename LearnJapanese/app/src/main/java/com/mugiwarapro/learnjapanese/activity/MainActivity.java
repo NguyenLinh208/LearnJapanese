@@ -24,6 +24,7 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
 import com.mugiwarapro.learnjapanese.adapter.NavigationDrawerAdapter;
+import com.mugiwarapro.learnjapanese.fragment.AlertDialogFragment;
 import com.mugiwarapro.learnjapanese.fragment.CategoryGridFragment;
 import com.mugiwarapro.learnjapanese.fragment.HomeFragment;
 import com.mugiwarapro.learnjapanese.R;
@@ -48,9 +49,6 @@ public class MainActivity extends ActionBarActivity {
     private static final int REQ_CODE_TTS = 1;
     private DrawerLayout mDrawerLayout;
     private ListView mDrawList;
-    private List<WordEntity> mData;
-    private String[] mParts;
-    private String[] mCategories;
     private ActionBarDrawerToggle mDrawerToggle;
 
     private CharSequence mDrawTitle;
@@ -62,8 +60,8 @@ public class MainActivity extends ActionBarActivity {
     private ArrayList<NavigationDrawerItem> navDrawerItems;
     private NavigationDrawerAdapter adapter;
 
+    //Check database file
     private static File mFileDir;
-
     public static File getApplicationDir() {
         return mFileDir;
     }
@@ -73,6 +71,8 @@ public class MainActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        AlertDialogFragment dialogFragment = new AlertDialogFragment();
 
         mTitle = mDrawTitle = getTitle();
 
@@ -133,6 +133,7 @@ public class MainActivity extends ActionBarActivity {
         } else {
             mFileDir = getFilesDir();
         }
+        checkTTSinstalled();
         checkDbFileExists();
     }
 
@@ -177,7 +178,6 @@ public class MainActivity extends ActionBarActivity {
             // error in creating fragment
             Log.e("MainActivity", "Error in creating fragment");
         }
-
         Log.v("MenuTitle", navMenuTitles[0]);
 
     }
@@ -276,24 +276,6 @@ public class MainActivity extends ActionBarActivity {
         }
     }
 
-    private void checkDbFileExists() {
-        // DBファイルの存在確認
-        String dbFilename = "data";
-        if(!dbFilename.endsWith(".db")) {
-            dbFilename += ".db";
-        }
-
-        final File dbFile = new File(MainActivity.getApplicationDir(), dbFilename);
-        // 存在している場合，削除の確認
-        if(dbFile.exists()) {
-            Toast.makeText(MainActivity.this,"Load thành công Data ", Toast.LENGTH_SHORT).show();
-        } else {
-            // ファイルが存在しない場合，DB作成へ
-            createDatabase();
-            Toast.makeText(MainActivity.this,"Đang tạo Data" , Toast.LENGTH_SHORT).show();
-        }
-    }
-
     @Override
     protected void onResume() {
         super.onResume();
@@ -316,126 +298,28 @@ public class MainActivity extends ActionBarActivity {
         pref.edit().putInt(Config.PASSED_DAYS, DateUtil.getPassedDays()).commit();
     }
 
+    /**
+     * DBファイルがすでに存在しているか確認し，存在している場合は削除許可を求める
+     * 存在していない，もしくは削除しても良いならば，createDatabaseを呼び出す
+     */
+    private void checkDbFileExists() {
+        // DBファイルの存在確認
+        String dbFilename = "data.db";
+        if(!dbFilename.endsWith(".db")) {
+            dbFilename += ".db";
+        }
 
-    private void createDatabase() {
-        // ファイル名取得
-        String csvFilename = "data.csv";
-        if(readData()) {
-            // 存在しているDBを削除csv
-            // 別スレッドでDBを作成
-            createDatabaseInBackground("database");
+        final File dbFile = new File(MainActivity.getApplicationDir(), dbFilename);
+        // 存在している場合，削除の確認
+        if(dbFile.exists()) {
         } else {
-            // 何らかの原因でDBファイルの作成に失敗
-            String msg = getResources().getString(R.string.db_create_fail);
-            Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_SHORT).show();
+            // ファイルが存在しない場合，DB作成へ
+            FragmentManager fragmentManager = getFragmentManager();
+            AlertDialogFragment dialogFragment = new AlertDialogFragment();
+            dialogFragment.show(fragmentManager,"Dialog");
         }
     }
 
-    private void createDatabaseInBackground(final String dbFilename) {
-        // 非同期タスクで実行
-        // UIスレッドでは検索中ダイアログを表示
-        new AsyncTask<Void, Void, Void>() {
 
-            @Override
-            protected Void doInBackground(Void... args) {
-                // データベース作成
-                WordDbHelper.initDataBase(getApplicationContext(), dbFilename);
-                // データの挿入
-                WordDao dao = new WordDao();
-                dao.insertWords(mData);
-                dao.remakeParts(mParts);
-                dao.remakeCategories(mCategories);
-                return null;
-            }
-
-        }.execute();
-    }
-
-    private boolean readData() {
-        BufferedReader br = null;
-        int lineNum = 4;
-        try {
-            br = new BufferedReader(new InputStreamReader(getResources().openRawResource(R.raw.data)));
-            //	br = new BufferedReader(new InputStreamReader(new FileInputStream(new File(MainActivity.getApplicationDir(), filename)), ENCODE));
-            // 1行目は読み飛ばす
-            br.readLine();
-            // 2行目：品詞
-            mParts = br.readLine().split(",");
-            // 3行目：カテゴリ
-            mCategories = br.readLine().split(",");
-            // 4行目以降：データ
-            mData = new ArrayList<WordEntity>();
-            String line;
-            while((line = br.readLine()) != null) {
-                // 単語データを作成する
-                WordEntity word = new WordEntity();
-                // csvファイルの形式：
-                // spell,meaning,part,category,exen,exja
-                String[] info = line.split(",");
-                // 必須情報が欠けている場合，エラーを吐く
-                if(info.length < 3) {
-                    throw new IllegalFormatException();
-                }
-                int id;
-                for(int i=0; i<info.length; i++) {
-                    switch(i) {
-                        case 0:	// 必須：スペル
-                            word.setSpell(info[i]);
-                            break;
-                        case 1:	// 必須：意味
-                            word.setMeaning(info[i]);
-                            break;
-                        case 2:	// 必須：品詞
-                            id = ArrayUtil.linearSearch(mParts, info[i]);
-                            if(id < 0) {
-                                throw new IllegalFormatException();
-                            } else {
-                                word.setPartId(id);
-                            }
-                            break;
-                        case 3:	// 任意：カテゴリ
-                            id = ArrayUtil.linearSearch(mCategories, info[i]);
-                            if(id < 0) {
-                                throw new IllegalFormatException();
-                            } else {
-                                word.setCategoryId(id);
-                            }
-                            break;
-                        case 4:	// 任意：例文
-                            word.setExampleEn(info[i]);
-                            break;
-                        case 5:	// 任意：和訳
-                            word.setExampleJa(info[i]);
-                            break;
-                    }
-                }
-                // リストに追加
-                mData.add(word);
-                // 行数を増やす（エラー表示用）
-                lineNum ++;
-            }
-        } catch (FileNotFoundException e) {
-            Toast.makeText(getApplicationContext(), "Error: cannot find the file : ", Toast.LENGTH_SHORT).show();
-            return false;
-        } catch (IOException e) {
-            Toast.makeText(getApplicationContext(), "Error: cannot read the file : " , Toast.LENGTH_SHORT).show();
-            return false;
-        } catch (IllegalFormatException e) {
-            Toast.makeText(getApplicationContext(), "Error: illegal format : " + "(line" + lineNum + ")", Toast.LENGTH_SHORT).show();
-            return false;
-        } finally {
-            try {
-                if(br != null) {
-                    br.close();
-                }
-            } catch(IOException e) {
-                return false;
-            }
-        }
-        return true;
-    }
-
-    @SuppressWarnings("serial")
-    private class IllegalFormatException extends Exception {}
 }
 

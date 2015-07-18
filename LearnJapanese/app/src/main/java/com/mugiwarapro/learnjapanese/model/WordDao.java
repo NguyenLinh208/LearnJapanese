@@ -4,6 +4,7 @@ import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteStatement;
+import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -72,6 +73,7 @@ public class WordDao {
 	public void insertWords(List<WordEntity> words) {
 		// データベース取得
 		SQLiteDatabase db = mDbHelper.getWritableDatabase();
+
 		// トランザクション開始
 		db.beginTransaction();
 		try {
@@ -91,6 +93,7 @@ public class WordDao {
 				stmt.executeInsert();
 			}
 			db.setTransactionSuccessful();
+			Log.v("insertWord:"," OK ");
 		} finally {
 			db.endTransaction();
 		}
