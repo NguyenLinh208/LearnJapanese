@@ -8,20 +8,19 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.speech.tts.TextToSpeech;
+import android.support.v7.app.ActionBarActivity;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
-
 import com.mugiwarapro.learnjapanese.Config;
 import com.mugiwarapro.learnjapanese.R;
 import com.mugiwarapro.learnjapanese.adapter.WordListAdapter;
 import com.mugiwarapro.learnjapanese.util.KeyboardUtil;
-
 import java.util.List;
 import java.util.Locale;
 
-public abstract class WordListBase<T> extends Activity implements TextToSpeech.OnInitListener {
+public abstract class WordListBase<T> extends ActionBarActivity implements TextToSpeech.OnInitListener {
 
 	// 必要な情報のみの射影
 	public static final String[] PROJECTION = WordDbHelper.WORD_ALL_INFO;

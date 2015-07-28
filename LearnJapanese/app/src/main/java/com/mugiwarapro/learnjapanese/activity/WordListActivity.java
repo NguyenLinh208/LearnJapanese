@@ -43,6 +43,7 @@ public class  WordListActivity extends WordListBase<String> {
 	@Override
 	protected void initOnCreate() {
 
+		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
 		// ビューの取得
         mSearchWord = (EditText)findViewById(R.id.search_text);
@@ -171,5 +172,12 @@ public class  WordListActivity extends WordListBase<String> {
 				null,
 				msg
 		).show();
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem menuItem)
+	{
+		onBackPressed();
+		return true;
 	}
 }

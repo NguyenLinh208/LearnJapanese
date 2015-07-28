@@ -7,6 +7,7 @@ import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v7.app.ActionBarActivity;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -32,7 +33,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class DbCreateActivity extends Activity implements OnClickListener, android.content.DialogInterface.OnClickListener {
+public class DbCreateActivity extends ActionBarActivity implements OnClickListener, android.content.DialogInterface.OnClickListener {
 
 	private static final String ENCODE = "UTF-8";
 
@@ -50,6 +51,7 @@ public class DbCreateActivity extends Activity implements OnClickListener, andro
         setContentView(R.layout.activity_db_create);
         KeyboardUtil.initHide(this);
 
+		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         // 各種ビューの取得
         mDbFileName = (EditText)findViewById(R.id.name_edit);
         mDataFileName = (EditText)findViewById(R.id.data_file_edit);

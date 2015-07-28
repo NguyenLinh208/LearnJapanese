@@ -16,8 +16,10 @@ public class WordDbHelper extends SQLiteOpenHelper {
 	// デフォルト設定
 	public static final String DEF_DB_NAME = "data.db";
 	// 品詞一覧
-	private static final String[] DEF_PARTS = {"名詞", "動詞", "助動詞", "形容詞", "副詞", "前置詞", "接続詞", "熟語"};
+//	private static final String[] DEF_PARTS = {"名詞", "動詞", "助動詞", "形容詞", "副詞", "前置詞", "接続詞", "熟語"};
 	// カテゴリ
+
+	private static final String[] DEF_PARTS ={"Danh từ","Động từ","Trợ động từ","Tính từ","Trợ từ","Tiền tố","Từ nối","Thục ngữ"};
 	private static final String[] DEF_CATEGORIES = {"Clothing","Direction","Nature","Culture","Daily Routines","Relationship","Weather","Office","Travel","TAT200"};
 
 	// 単語テーブル

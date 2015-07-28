@@ -1,27 +1,29 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
 	android:layout_width="match_parent"
-	android:layout_height="match_parent" >
+	android:layout_height="match_parent"
+    android:background="@android:color/background_light">
 
 	<TextView
 		android:layout_width="match_parent"
 		android:layout_height="50dp"
         android:gravity="center"
         android:textSize="30dp"
-        android:background="@color/md_orange_100"
+        android:textColor="@android:color/darker_gray"
 		android:text="@string/db_create_success"/>
-    <LinearLayout
-        android:orientation="horizontal"
+
+    <View
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="12dip"
-        android:gravity="center">
-        <Button
-            android:id="@+id/finish_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="10dip"
-            android:text="@string/finish_button" />
-   	</LinearLayout>
+        android:layout_height="2dp"
+        android:background="@android:color/holo_orange_dark" />
+
+    <Button
+        android:id="@+id/finish_button"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_margin="10dip"
+        android:background="@android:color/background_light"
+        android:textColor="@android:color/darker_gray"
+        android:text="Học ngay" />
 
 </LinearLayout>

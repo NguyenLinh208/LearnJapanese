@@ -7,7 +7,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.content.res.TypedArray;
-import android.os.AsyncTask;
 import android.os.Environment;
 import android.preference.PreferenceManager;
 import android.speech.tts.TextToSpeech;
@@ -50,7 +49,6 @@ public class MainActivity extends ActionBarActivity {
     private DrawerLayout mDrawerLayout;
     private ListView mDrawList;
     private ActionBarDrawerToggle mDrawerToggle;
-
     private CharSequence mDrawTitle;
     private CharSequence mTitle;
 
@@ -66,7 +64,6 @@ public class MainActivity extends ActionBarActivity {
         return mFileDir;
     }
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -79,7 +76,6 @@ public class MainActivity extends ActionBarActivity {
         //Load slide menu Item
         navMenuTitles = getResources().getStringArray(R.array.nav_drawer_items);
         navMenuIcons = getResources().obtainTypedArray(R.array.nav_drawer_icons);
-
         mDrawerLayout = (DrawerLayout)findViewById(R.id.drawer_layout);
         mDrawList = (ListView)findViewById(R.id.list_slidermenu);
 
@@ -99,9 +95,9 @@ public class MainActivity extends ActionBarActivity {
         mDrawList.setOnItemClickListener(new SlideMenuClickListener());
 
         //Show actionbar
-        getSupportActionBar().setDisplayShowTitleEnabled(true);
+       // getSupportActionBar().setDisplayShowTitleEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+       // getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         mDrawerToggle = new ActionBarDrawerToggle(
                 this,
                 mDrawerLayout,
