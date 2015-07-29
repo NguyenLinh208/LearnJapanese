@@ -1,15 +1,17 @@
 package com.mugiwarapro.learnjapanese.activity;
 
+import android.app.Activity;
 import android.app.Fragment;
-import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.content.res.TypedArray;
+import android.os.Build;
 import android.os.Environment;
 import android.preference.PreferenceManager;
 import android.speech.tts.TextToSpeech;
+import android.support.v4.view.GravityCompat;
 import android.support.v7.app.ActionBarActivity;
 import android.app.FragmentManager;
 import android.os.Bundle;
@@ -21,29 +23,21 @@ import android.support.v4.widget.DrawerLayout;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
-import android.widget.Toast;
 import com.mugiwarapro.learnjapanese.adapter.NavigationDrawerAdapter;
 import com.mugiwarapro.learnjapanese.fragment.AlertDialogFragment;
 import com.mugiwarapro.learnjapanese.fragment.CategoryGridFragment;
 import com.mugiwarapro.learnjapanese.fragment.HomeFragment;
 import com.mugiwarapro.learnjapanese.R;
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStreamReader;
 import java.util.ArrayList;
-import java.util.List;
 import com.mugiwarapro.learnjapanese.Config;
 import com.mugiwarapro.learnjapanese.fragment.SettingFragment;
 import com.mugiwarapro.learnjapanese.model.NavigationDrawerItem;
-import com.mugiwarapro.learnjapanese.model.WordDao;
 import com.mugiwarapro.learnjapanese.model.WordDbHelper;
-import com.mugiwarapro.learnjapanese.model.WordEntity;
-import com.mugiwarapro.learnjapanese.util.ArrayUtil;
 import com.mugiwarapro.learnjapanese.util.DateUtil;
+import android.app.ActionBar;
 
-public class MainActivity extends ActionBarActivity {
+public class MainActivity extends Activity {
 
     private static final int REQ_CODE_TTS = 1;
     private DrawerLayout mDrawerLayout;
@@ -72,17 +66,19 @@ public class MainActivity extends ActionBarActivity {
         AlertDialogFragment dialogFragment = new AlertDialogFragment();
 
         mTitle = mDrawTitle = getTitle();
+        ActionBar mActionbar = getActionBar();
 
         //Load slide menu Item
         navMenuTitles = getResources().getStringArray(R.array.nav_drawer_items);
         navMenuIcons = getResources().obtainTypedArray(R.array.nav_drawer_icons);
         mDrawerLayout = (DrawerLayout)findViewById(R.id.drawer_layout);
+        mDrawerLayout.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START);
         mDrawList = (ListView)findViewById(R.id.list_slidermenu);
 
         //List item of NavigationDrawer
         navDrawerItems = new ArrayList<NavigationDrawerItem>();
 
-        // adding nav drawer items to array
+        // a dding nav drawer items to array
         // Home
         navDrawerItems.add(new NavigationDrawerItem(navMenuTitles[0], navMenuIcons.getResourceId(0, -1)));
         // Setting
@@ -90,14 +86,16 @@ public class MainActivity extends ActionBarActivity {
         // Category
         navDrawerItems.add(new NavigationDrawerItem(navMenuTitles[2], navMenuIcons.getResourceId(2, -1)));
         navMenuIcons.recycle();
+
+        //set adapter for draw navigation list
         adapter = new NavigationDrawerAdapter(getApplicationContext(),navDrawerItems);
         mDrawList.setAdapter(adapter);
         mDrawList.setOnItemClickListener(new SlideMenuClickListener());
 
-        //Show actionbar
-       // getSupportActionBar().setDisplayShowTitleEnabled(true);
-        getSupportActionBar().setHomeButtonEnabled(true);
-       // getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        mActionbar.setHomeButtonEnabled(true);
+        mActionbar.setDisplayHomeAsUpEnabled(true);
+
         mDrawerToggle = new ActionBarDrawerToggle(
                 this,
                 mDrawerLayout,
@@ -106,17 +104,16 @@ public class MainActivity extends ActionBarActivity {
                 R.string.app_name
         ){
             public void onDrawerClosed(View view) {
-                getSupportActionBar().setTitle(mTitle);
                 invalidateOptionsMenu();
             }
 
             public void onDrawerOpened(View drawerView) {
-                getSupportActionBar().setTitle(mDrawTitle);
                 invalidateOptionsMenu();
             }
         };
 
         mDrawerLayout.setDrawerListener(mDrawerToggle);
+
         if (savedInstanceState == null) {
             displayView(0);
         }
@@ -169,6 +166,7 @@ public class MainActivity extends ActionBarActivity {
             mDrawList.setItemChecked(position, true);
             mDrawList.setSelection(position);
             setTitle(navMenuTitles[position]);
+
             mDrawerLayout.closeDrawer(mDrawList);
         } else {
             // error in creating fragment
@@ -177,6 +175,7 @@ public class MainActivity extends ActionBarActivity {
         Log.v("MenuTitle", navMenuTitles[0]);
 
     }
+
     /**
      * Slide menu item click listener
      * */
@@ -188,15 +187,13 @@ public class MainActivity extends ActionBarActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        // The action bar home/up action should open or close the drawer.
+        // ActionBarDrawerToggle will take care of this.
         if (mDrawerToggle.onOptionsItemSelected(item)) {
             return true;
         }
-        switch (item.getItemId()) {
-            case R.id.action_settings:
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
-        }
+
+        return false;
     }
 
     /***
@@ -213,7 +210,7 @@ public class MainActivity extends ActionBarActivity {
     @Override
     public void setTitle(CharSequence title) {
         mTitle = title;
-        getSupportActionBar().setTitle(mTitle);
+        getActionBar().setTitle(mTitle);
     }
 
     @Override

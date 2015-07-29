@@ -7,8 +7,7 @@ import android.content.Intent;
 import android.os.Bundle;
 
 import com.mugiwarapro.learnjapanese.R;
-import com.mugiwarapro.learnjapanese.activity.DbCreate;
-import com.mugiwarapro.learnjapanese.activity.DbCreateActivity;
+import com.mugiwarapro.learnjapanese.activity.InitDatabase;
 
 import android.content.DialogInterface;
 
@@ -24,7 +23,7 @@ public class AlertDialogFragment extends DialogFragment {
         builder.setMessage(R.string.creat_data_dialog)
                 .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-                        Intent install = new Intent(getActivity(), DbCreate.class);
+                        Intent install = new Intent(getActivity(), InitDatabase.class);
                         startActivity(install);
                     }
                 });

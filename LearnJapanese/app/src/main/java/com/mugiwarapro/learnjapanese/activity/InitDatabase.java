@@ -26,7 +26,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class DbCreate extends Activity {
+public class InitDatabase extends Activity {
 
 	private static final String ENCODE = "UTF-8";
 
@@ -81,7 +81,7 @@ public class DbCreate extends Activity {
 			String title = getResources().getString(R.string.confirm);
 			String msg   = getResources().getString(R.string.confirm_db_delete);
 			new YesNoDialog(
-					DbCreate.this,
+					InitDatabase.this,
 					// 削除許可の場合，DB作成へ
 					new DialogInterface.OnClickListener() {
 						public void onClick(DialogInterface dialog, int which) {
@@ -130,7 +130,7 @@ public class DbCreate extends Activity {
     		@Override
 			protected void onPreExecute() {
     			// 作成中というダイアログを表示
-				progressDialog = new ProgressDialog(DbCreate.this);
+				progressDialog = new ProgressDialog(InitDatabase.this);
 				progressDialog.setTitle(R.string.progress_create);
 				progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
 				progressDialog.setCancelable(true);
